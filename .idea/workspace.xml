@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71f887c9-df99-421c-b474-abb2185f54e8" name="Changes" comment="cffdwdw">
-      <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
+    <list default="true" id="71f887c9-df99-421c-b474-abb2185f54e8" name="Changes" comment="txt ichidagini intall qliylar">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +146,7 @@
       <workItem from="1749820155540" duration="2058000" />
       <workItem from="1749883545706" duration="249000" />
       <workItem from="1749893486140" duration="617000" />
-      <workItem from="1750067656712" duration="2233000" />
+      <workItem from="1750067656712" duration="3814000" />
     </task>
     <task id="LOCAL-00001" summary="cff">
       <option name="closed" value="true" />
@@ -284,7 +284,31 @@
       <option name="project" value="LOCAL" />
       <updated>1750069978664</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Postgres unlandi pyc2 instal qlvoliylar">
+      <option name="closed" value="true" />
+      <created>1750070262208</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1750070262208</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Postgres unlandi pyc2 instal qlvoliylar">
+      <option name="closed" value="true" />
+      <created>1750070364962</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1750070364962</updated>
+    </task>
+    <task id="LOCAL-00020" summary="txt ichidagini intall qliylar">
+      <option name="closed" value="true" />
+      <created>1750070407073</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1750070407073</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -294,7 +318,9 @@
     <MESSAGE value="cff" />
     <MESSAGE value="asdfghjkl'" />
     <MESSAGE value="cffdwdw" />
-    <option name="LAST_COMMIT_MESSAGE" value="cffdwdw" />
+    <MESSAGE value="Postgres unlandi pyc2 instal qlvoliylar" />
+    <MESSAGE value="txt ichidagini intall qliylar" />
+    <option name="LAST_COMMIT_MESSAGE" value="txt ichidagini intall qliylar" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
 </project>
