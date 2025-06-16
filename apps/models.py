@@ -1,94 +1,144 @@
 from django.db import models
-
-class Course(models.Model):
-    name = models.CharField(max_length=255)
-
-    def str(self):
-        return self.name
-
-
-class Group(models.Model):
-    name = models.CharField(max_length=255)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='groups')
-
-    def str(self):
-        return self.name
-
-
-class Badge(models.Model):
-    name = models.CharField(max_length=255)
-    icon = models.CharField(max_length=255)  # Или models.ImageField если иконка — файл
-
-    def str(self):
-        return self.name
+from django.contrib.auth.hashers import make_password, check_password
+from django.utils import timezone
+import uuid
 
 
 class User(models.Model):
-    ROLE_CHOICES = (
-        ('student', 'Student'),
-        ('teacher', 'Teacher'),
+    ROLE_CHOICES = [
         ('admin', 'Admin'),
-    )
+        ('teacher', 'Teacher'),
+        ('student', 'Student'),
+    ]
 
-    fullname = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
-    password = models.CharField(max_length=255)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, related_name='users')
-    level = models.IntegerField()
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    fullname = models.CharField(max_length=100)
+    username = models.CharField(max_length=50, unique=True)
+    password_hash = models.CharField(max_length=128)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    group = models.ForeignKey('Group', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    def set_password(self, raw_password):
+        self.password_hash = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password_hash)
+
+    def __str__(self):
+        return f"{self.fullname} ({self.username})"
+
+    class Meta:
+        ordering = ['fullname']
 
 
-class UserBadge(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_badges')
-    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+class Session(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sessions')
+    token = models.CharField(max_length=255, unique=True, default=uuid.uuid4)
+    device_name = models.CharField(max_length=100, blank=True)
+    ip_address = models.GenericIPAddressField()
+    last_login = models.DateTimeField(auto_now=True)
+    expires_at = models.DateTimeField()
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    def __str__(self):
+        return f"{self.user.username} - {self.device_name}"
+
+    class Meta:
+        ordering = ['-last_login']
 
 
-class Assignment(models.Model):
-    ASSIGNMENT_TYPE_CHOICES = (
-        ('quiz', 'Quiz'),
-        ('code', 'Code'),
-        ('essay', 'Essay'),
-    )
+class Group(models.Model):
+    name = models.CharField(max_length=100)
+    teacher = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
+                                limit_choices_to={'role': 'teacher'}, related_name='teaching_groups')
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    title = models.CharField(max_length=255)
+    @property
+    def student_count(self):
+        return self.user_set.filter(role='student').count()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+class Homework(models.Model):
+    title = models.CharField(max_length=200)
     description = models.TextField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assignments')
-    difficulty = models.IntegerField()
+    points = models.PositiveIntegerField()
+    start_date = models.DateTimeField()
     deadline = models.DateTimeField()
-    assignment_type = models.CharField(max_length=20, choices=ASSIGNMENT_TYPE_CHOICES)
+    line_limit = models.PositiveIntegerField(null=True, blank=True)
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE,
+                                limit_choices_to={'role': 'teacher'}, related_name='homeworks')
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='homeworks')
+    file_extension = models.CharField(max_length=10, default='.py')
+    ai_grading_prompt = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.group.name}"
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class Submission(models.Model):
-    SUBMISSION_TYPE_CHOICES = (
-        ('file', 'File'),
-        ('link', 'Link'),
-    )
-
-    STATUS_CHOICES = (
-        ('submitted', 'Submitted'),
-        ('reviewed', 'Reviewed'),
-        ('rejected', 'Rejected'),
-    )
-
-    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='submissions')
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='submissions')
-    submission_type = models.CharField(max_length=20, choices=SUBMISSION_TYPE_CHOICES)
-    github_link = models.URLField(null=True, blank=True)
-    description = models.TextField(blank=True)
-    notes = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
-    score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    feedback = models.TextField(blank=True)
-    detailed_review = models.JSONField(null=True, blank=True)
+    homework = models.ForeignKey(Homework, on_delete=models.CASCADE, related_name='submissions')
+    student = models.ForeignKey(User, on_delete=models.CASCADE,
+                                limit_choices_to={'role': 'student'}, related_name='submissions')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    ai_grade = models.FloatField(null=True, blank=True)
+    final_grade = models.FloatField(null=True, blank=True)
+    ai_feedback = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.student.fullname} - {self.homework.title}"
+
+    class Meta:
+        unique_together = ['homework', 'student']
+        ordering = ['-submitted_at']
 
 
 class SubmissionFile(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name='files')
-    url = models.URLField()
-    name = models.CharField(max_length=255)
-    size = models.BigIntegerField()
+    file_name = models.CharField(max_length=255)
+    content = models.TextField()
+    line_count = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        if self.content:
+            self.line_count = len(self.content.split('\n'))
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.file_name} - {self.submission}"
+
+    class Meta:
+        ordering = ['file_name']
+
+
+class Grade(models.Model):
+    submission = models.OneToOneField(Submission, on_delete=models.CASCADE, related_name='grade')
+    ai_task_completeness = models.FloatField(null=True, blank=True)
+    ai_code_quality = models.FloatField(null=True, blank=True)
+    ai_correctness = models.FloatField(null=True, blank=True)
+    ai_total = models.FloatField(null=True, blank=True)
+    final_task_completeness = models.FloatField(null=True, blank=True)
+    final_code_quality = models.FloatField(null=True, blank=True)
+    final_correctness = models.FloatField(null=True, blank=True)
+    teacher_total = models.FloatField(null=True, blank=True)
+    ai_feedback = models.TextField(blank=True)
+    task_completeness_feedback = models.TextField(blank=True)
+    code_quality_feedback = models.TextField(blank=True)
+    correctness_feedback = models.TextField(blank=True)
+    modified_by_teacher = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Grade for {self.submission}"
+
