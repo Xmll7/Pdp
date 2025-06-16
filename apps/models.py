@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
+from django.db.models import Model, CharField, ForeignKey
 from django.utils import timezone
 import uuid
 
@@ -49,9 +50,13 @@ class Session(models.Model):
         ordering = ['-last_login']
 
 
+class Course(Model):
+    name=CharField(max_length=255)
+
 class Group(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='groups')
     name = models.CharField(max_length=100)
-    teacher = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
+    teacher = models.ForeignKey(User, on_delete=models.SET_NULL,
                                 limit_choices_to={'role': 'teacher'}, related_name='teaching_groups')
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -141,4 +146,7 @@ class Grade(models.Model):
 
     def __str__(self):
         return f"Grade for {self.submission}"
+
+
+
 
