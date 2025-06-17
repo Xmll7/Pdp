@@ -56,7 +56,7 @@ class Course(Model):
 class Group(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='groups')
     name = models.CharField(max_length=100)
-    teacher = models.ForeignKey(User, on_delete=models.SET_NULL,
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE,
                                 limit_choices_to={'role': 'teacher'}, related_name='teaching_groups')
     created_at = models.DateTimeField(auto_now_add=True)
 
