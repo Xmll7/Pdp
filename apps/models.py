@@ -157,3 +157,4 @@ class UserSession(Model):
 
     class Meta:
         ordering = ['-created_at']
+
