@@ -191,7 +191,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'total_score', 'rank']
+        fields = ['id', 'fullname', 'total_score', 'rank']
 
     def get_rank(self, obj):
         queryset = self.context['view'].get_queryset()

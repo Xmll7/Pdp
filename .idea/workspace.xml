@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71f887c9-df99-421c-b474-abb2185f54e8" name="Changes" comment="sqlite">
-      <change afterPath="$PROJECT_DIR$/apps/permission.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/serializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +49,7 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2yS1nhLOBIjh5wh6BrQyg7foole" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="false" id="Update" />
     <ConfirmationsSetting value="2" id="Add" />
   </component>
