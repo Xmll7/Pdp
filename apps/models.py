@@ -1,35 +1,52 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
-from django.db.models import Model, CharField, ForeignKey
+from django.db.models import Model, ForeignKey, TextField, CASCADE, CharField, GenericIPAddressField, DateTimeField
 from django.utils import timezone
 import uuid
 
 
-class User(models.Model):
-    ROLE_CHOICES = [
+class Course(Model):
+    name = CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+class Group(models.Model):
+    name = models.CharField(max_length=100)
+    teacher = models.ForeignKey('User', on_delete=models.CASCADE,
+                                limit_choices_to={'role': 'teacher'}, related_name='teaching_groups')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def student_count(self):
+        return self.students.count()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+class User(AbstractUser):
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('teacher', 'Teacher'),
         ('student', 'Student'),
-    ]
-
+    )
+    role = CharField(max_length=50, choices=ROLE_CHOICES, default='student')
     fullname = models.CharField(max_length=100)
-    username = models.CharField(max_length=50, unique=True)
-    password_hash = models.CharField(max_length=128)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-    group = models.ForeignKey('Group', on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def set_password(self, raw_password):
-        self.password_hash = make_password(raw_password)
-
-    def check_password(self, raw_password):
-        return check_password(raw_password, self.password_hash)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, related_name="students")
+    created_at = models.DateTimeField(auto_now_add=True)  # Changed to DateTimeField for consistency
 
     def __str__(self):
         return f"{self.fullname} ({self.username})"
-
-    class Meta:
-        ordering = ['fullname']
 
 
 class Session(models.Model):
@@ -48,27 +65,6 @@ class Session(models.Model):
 
     class Meta:
         ordering = ['-last_login']
-
-
-class Course(Model):
-    name=CharField(max_length=255)
-
-class Group(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='groups')
-    name = models.CharField(max_length=100)
-    teacher = models.ForeignKey(User, on_delete=models.CASCADE,
-                                limit_choices_to={'role': 'teacher'}, related_name='teaching_groups')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    @property
-    def student_count(self):
-        return self.user_set.filter(role='student').count()
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ['name']
 
 
 class Homework(models.Model):
@@ -148,5 +144,16 @@ class Grade(models.Model):
         return f"Grade for {self.submission}"
 
 
+class UserSession(Model):
+    user = ForeignKey(User, on_delete=CASCADE)
+    refresh_token = CharField(max_length=255)
+    user_agent = TextField(blank=True, null=True)
+    ip_address = GenericIPAddressField(blank=True, null=True)
+    created_at = DateTimeField(auto_now_add=True)
+    jti = CharField(max_length=255, unique=True)
 
+    def __str__(self):
+        return f"{self.user.username} - Session"
 
+    class Meta:
+        ordering = ['-created_at']
