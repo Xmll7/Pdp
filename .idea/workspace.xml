@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71f887c9-df99-421c-b474-abb2185f54e8" name="Changes" comment="sqlite">
+    <list default="true" id="71f887c9-df99-421c-b474-abb2185f54e8" name="Changes" comment="txt ichidagini intall qliylar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/serializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -357,7 +356,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750135147210</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="txt ichidagini intall qliylar">
+      <option name="closed" value="true" />
+      <created>1750416414913</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1750416414913</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -368,9 +375,9 @@
     <MESSAGE value="asdfghjkl'" />
     <MESSAGE value="cffdwdw" />
     <MESSAGE value="Postgres unlandi pyc2 instal qlvoliylar" />
-    <MESSAGE value="txt ichidagini intall qliylar" />
     <MESSAGE value="sqlite" />
-    <option name="LAST_COMMIT_MESSAGE" value="sqlite" />
+    <MESSAGE value="txt ichidagini intall qliylar" />
+    <option name="LAST_COMMIT_MESSAGE" value="txt ichidagini intall qliylar" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
 </project>
